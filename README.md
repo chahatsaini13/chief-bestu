@@ -27,7 +27,7 @@ Most chatbots feel like a form with a text box. Chief Bestu is built around a ch
 | Frontend | https://chief-bestu-lks6.vercel.app/ |
 | Backend | https://chief-bestu.onrender.com |
 | Backend health | https://chief-bestu.onrender.com/health |
-| Demo video | `<paste video link here>` |
+| Demo video | https://drive.google.com/drive/folders/1YazSH8zbscCKNHVCyXVe5Vo05S_pdo-T?usp=drive_link |
 
 > The backend runs on a free tier and sleeps when idle. The first request after a pause can take about a minute.
 > The free tier also has no persistent disk, so history and cache can reset when the service restarts.
