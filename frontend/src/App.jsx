@@ -5,10 +5,25 @@ import { sendChat } from "./api.js";
 const newSessionId = () => "s-" + Math.random().toString(36).slice(2, 10);
 
 const STARTERS = [
-  "Ghee khatam, padhai nahi ho rahi",
-  "Mera din CEO ki tarah plan kar",
+  "I'm procrastinating on studying",
+  "Plan my day like a CEO",
   "What is the capital of France?",
 ];
+
+const HEART = "\u2665";
+const STAR = "\u2726";
+
+const THEMES = [["pink", "Pink"], ["lavender", "Lavender"], ["mint", "Mint"], ["night", "Night"]];
+const FONTS = [["pixel", "Pixel"], ["clean", "Easy to read"]];
+
+function loadPref(key, fallback, allowed) {
+  try {
+    const v = localStorage.getItem(key);
+    return allowed.some(([id]) => id === v) ? v : fallback;
+  } catch {
+    return fallback;
+  }
+}
 
 let nextId = 1;
 
@@ -20,7 +35,21 @@ export default function App() {
   const [systemPrompt, setSystemPrompt] = useState("");
   const [simulate, setSimulate] = useState("");
   const [showConsole, setShowConsole] = useState(false);
+  const [showStyle, setShowStyle] = useState(false);
+  const [theme, setTheme] = useState(() => loadPref("cb-theme", "pink", THEMES));
+  const [font, setFont] = useState(() => loadPref("cb-font", "pixel", FONTS));
   const bottomRef = useRef(null);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset.font = font;
+    try {
+      localStorage.setItem("cb-theme", theme);
+      localStorage.setItem("cb-font", font);
+    } catch {
+      /* storage blocked: preference just won't persist */
+    }
+  }, [theme, font]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -53,22 +82,55 @@ export default function App() {
   }
 
   return (
-    <div className="shell">
-      <header className="top">
-        <div className="brand">
-          <span className="logo" aria-hidden="true">👔</span>
-          <div>
-            <h1>Chief Bestu</h1>
-            <p className="tag">CEO jo kaam karwata hai. Bestfriend jo saath rehta hai.</p>
-          </div>
-        </div>
-        <div className="chips">
-          <span className="chip" title="New session on every page load">session {sessionId}</span>
+    <div className="window">
+      <div className="titlebar">
+        <span className="title">
+          <span className="sparkle">{STAR}</span> chat.exe
+        </span>
+        <span className="winbtns" aria-hidden="true">
+          <i>_</i>
+          <i>□</i>
+          <i>x</i>
+        </span>
+      </div>
+
+      <div className="statusbar">
+        <span className="status">
+          <span className="led" /> Chief Bestu {"\u00b7"} online {HEART}
+        </span>
+        <span className="chips">
+          <span className="chip" title="New session on every page load">
+            {sessionId}
+          </span>
+          <button className="chip btn" onClick={() => setShowStyle((v) => !v)} aria-expanded={showStyle}>
+            style
+          </button>
           <button className="chip btn" onClick={() => setShowConsole((v) => !v)} aria-expanded={showConsole}>
             {showConsole ? "hide" : "boardroom"} settings
           </button>
-        </div>
-      </header>
+        </span>
+      </div>
+
+      {showStyle && (
+        <section className="stylebar" aria-label="Look and feel">
+          <div className="opt">
+            <span>theme</span>
+            {THEMES.map(([id, label]) => (
+              <button key={id} className={"chip btn" + (theme === id ? " on" : "")} onClick={() => setTheme(id)}>
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="opt">
+            <span>font</span>
+            {FONTS.map(([id, label]) => (
+              <button key={id} className={"chip btn" + (font === id ? " on" : "")} onClick={() => setFont(id)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
 
       {showConsole && (
         <section className="console" aria-label="Boardroom settings">
@@ -98,8 +160,9 @@ export default function App() {
       <main className="feed" aria-live="polite">
         {messages.length === 0 && (
           <div className="empty">
-            <h2>Boss ka cabin khula hai.</h2>
-            <p>Kuch bhi pooch. Pehle jawab milega, phir masti.</p>
+            <div className="big-heart">{HEART}</div>
+            <h2>hi bestie!</h2>
+            <p>Ask me anything. Answers first, fun after.</p>
             <div className="starters">
               {STARTERS.map((s) => (
                 <button key={s} className="starter" onClick={() => send(s)}>
@@ -154,11 +217,11 @@ export default function App() {
                     <i>out</i>
                     <b data-testid="meta-output-tokens">{meta.output_tokens}</b>
                   </span>
-                  <span className="kv faint">
+                  <span className="kv">
                     <i>key</i>
                     <b>{meta.key_id ?? "none"}</b>
                   </span>
-                  <span className="kv faint">
+                  <span className="kv">
                     <i>fallbacks</i>
                     <b>{meta.fallback_attempts}</b>
                   </span>
@@ -170,8 +233,8 @@ export default function App() {
 
         {loading && (
           <div className="row">
-            <div className="bubble bot-bubble typing" aria-label="Chief Bestu is thinking">
-              Chief soch raha hai<span className="dots"><i>.</i><i>.</i><i>.</i></span>
+            <div className="bubble bot-bubble typing" aria-label="Chief Bestu is typing">
+              typing<span className="dots"><i>.</i><i>.</i><i>.</i></span>
             </div>
           </div>
         )}
@@ -185,7 +248,7 @@ export default function App() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Boss se kuch bol... (Enter = send, Shift+Enter = new line)"
+          placeholder="type a message..."
           maxLength={4000}
         />
         <button data-testid="send-button" onClick={() => send()} disabled={loading || !input.trim()}>
