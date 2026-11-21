@@ -168,3 +168,5 @@ curl -s $API/sessions/s-h/messages
 ---
 
 Built by **Chahat Saini**.
+
+<img width="1917" height="970" alt="Screenshot 2026-11-21 202101" src="https://github.com/user-attachments/assets/a8ace21f-0289-44c9-a536-f0df3895f9d1" />
