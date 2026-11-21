@@ -1,0 +1,13 @@
+# Seed slang menu. Format: phrase | meaning | use when | never when
+# This is the fallback list. If XAI_API_KEY is set, the server refreshes the live list
+# from Grok automatically (see app/slang.py) and falls back to this file if that fails.
+ghee khatam | totally drained | user is tired or burnt out from work | user is sad, scared or in real trouble
+aura +1000 | big respect points | user did something impressive | user is being sarcastic or is upset
+scene on hai | plan is going ahead | user is excited about a plan | user is hesitant or stressed about it
+jugaad lagate hain | let's find a clever workaround | user is stuck with limited resources | the problem is serious or safety related
+sigma move | confident, independent choice | user makes a bold solo decision | user is hurting someone or being reckless
+mauj kardi | you made it awesome | user shares good news or a win | user shares bad news
+chill kar, main hoon na | relax, I've got you | user is anxious about something small | user describes real distress (be calm and kind instead)
+full paisa vasool | totally worth it | user liked a purchase, trip or plan | user complains about money trouble
+bawaal | wild, chaotic and fun | something surprising or hilarious happened | the event hurt someone
+lag gayi | it hit hard | user got a big surprise or a tough task | user is grieving

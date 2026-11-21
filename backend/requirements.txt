@@ -1,0 +1,8 @@
+fastapi==0.165.0
+uvicorn[standard]==0.54.0
+litellm==1.110.2
+aiosqlite==0.22.1
+pydantic==2.13.5
+# litellm's cache path imports these lazily; without them the first cached call crashes
+orjson==3.13.0
+soundfile==0.14.0
